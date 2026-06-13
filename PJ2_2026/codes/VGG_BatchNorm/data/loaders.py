@@ -16,14 +16,14 @@ class PartialDataset(Dataset):
         self.dataset = dataset
         self.n_items = n_items
 
-    def __getitem__(self):
-        return self.dataset.__getitem__()
+    def __getitem__(self, index):
+        return self.dataset.__getitem__(index)
 
     def __len__(self):
         return min(self.n_items, len(self.dataset))
 
 
-def get_cifar_loader(root='../data/', batch_size=128, train=True, shuffle=True, num_workers=4, n_items=-1):
+def get_cifar_loader(root='../data/', batch_size=128, train=True, shuffle=True, num_workers=4, n_items=-1, download=True):
     normalize = transforms.Normalize(mean=[0.5, 0.5, 0.5],
                                      std=[0.5, 0.5, 0.5])
 
@@ -31,7 +31,7 @@ def get_cifar_loader(root='../data/', batch_size=128, train=True, shuffle=True, 
         [transforms.ToTensor(),
         normalize])
 
-    dataset = datasets.CIFAR10(root=root, train=train, download=True, transform=data_transforms)
+    dataset = datasets.CIFAR10(root=root, train=train, download=download, transform=data_transforms)
     if n_items > 0:
         dataset = PartialDataset(dataset, n_items)
 

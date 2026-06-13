@@ -4,7 +4,10 @@ VGG
 import numpy as np
 from torch import nn
 
-from codes_for_pj.utils.nn import init_weights_
+try:
+    from utils.nn import init_weights_
+except ImportError:
+    from ..utils.nn import init_weights_
 
 # ## Models implementation
 def get_number_of_parameters(model):
@@ -70,6 +73,69 @@ class VGG_A(nn.Module):
     def forward(self, x):
         x = self.features(x)
         x = self.classifier(x.view(-1, 512 * 1 * 1))
+        return x
+
+    def _init_weights(self):
+        for m in self.modules():
+            init_weights_(m)
+
+
+class VGG_A_BatchNorm(nn.Module):
+    """VGG-A with BatchNorm2d after each convolution."""
+
+    def __init__(self, inp_ch=3, num_classes=10, init_weights=True):
+        super().__init__()
+
+        self.features = nn.Sequential(
+            nn.Conv2d(inp_ch, 64, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.ReLU(True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(64, 128, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(128),
+            nn.ReLU(True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(128, 256, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(256),
+            nn.ReLU(True),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(256),
+            nn.ReLU(True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(256, 512, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),
+            nn.Conv2d(512, 512, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+
+            nn.Conv2d(512, 512, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),
+            nn.Conv2d(512, 512, kernel_size=3, padding=1, bias=False),
+            nn.BatchNorm2d(512),
+            nn.ReLU(True),
+            nn.MaxPool2d(kernel_size=2, stride=2),
+        )
+
+        self.classifier = nn.Sequential(
+            nn.Linear(512, 512),
+            nn.ReLU(True),
+            nn.Linear(512, 512),
+            nn.ReLU(True),
+            nn.Linear(512, num_classes),
+        )
+
+        if init_weights:
+            self._init_weights()
+
+    def forward(self, x):
+        x = self.features(x)
+        x = self.classifier(x.view(x.size(0), -1))
         return x
 
     def _init_weights(self):
@@ -182,5 +248,6 @@ class VGG_A_Dropout(nn.Module):
 
 if __name__ == '__main__':
     print(get_number_of_parameters(VGG_A()))
+    print(get_number_of_parameters(VGG_A_BatchNorm()))
     print(get_number_of_parameters(VGG_A_Light()))
     print(get_number_of_parameters(VGG_A_Dropout()))

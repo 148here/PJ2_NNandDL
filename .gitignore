@@ -1,0 +1,9 @@
+__pycache__/
+.pycache_check/
+
+PJ2_2026/data/
+PJ2_2026/codes/VGG_BatchNorm/data/
+
+PJ2_2026/outputs/
+
+report.md
