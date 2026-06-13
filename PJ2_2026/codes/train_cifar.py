@@ -549,108 +549,13 @@ def run_final(args):
     with open(Path(args.output_root) / "tables" / "final_summary.json", "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2)
     metrics = save_confusion_and_samples(args, result["checkpoint"])
-    generate_report(args)
     return result, metrics
-
-
-def generate_report(args):
-    root = project_root()
-    tables_dir = Path(args.output_root) / "tables"
-    final_eval_path = tables_dir / "final_eval.json"
-    final_summary_path = tables_dir / "final_summary.json"
-    sweep_summary_path = tables_dir / "sweep_summary.json"
-    vgg_summary_path = tables_dir / "vgg_bn_summary.json"
-
-    final_eval = load_json(final_eval_path)
-    final_summary = load_json(final_summary_path)
-    sweep_summary = load_json(sweep_summary_path, default=[])
-    vgg_summary = load_json(vgg_summary_path, default=[])
-
-    best_sweep = max(sweep_summary, key=lambda x: x.get("best_acc", 0), default=None)
-    final_acc = final_eval.get("test_acc", final_summary.get("best_acc", "TBD"))
-    final_error = 1 - final_acc if isinstance(final_acc, float) else "TBD"
-    params = final_eval.get("params", final_summary.get("params", "TBD"))
-
-    report = f"""# Project-2: CIFAR-10 Classification and Batch Normalization
-
-Name: **TODO**  
-Student ID: **TODO**  
-Code link: **TODO**  
-Dataset link: **CIFAR-10 official python version / TODO if uploaded**  
-Trained weights link: **TODO**
-
-## 1. CIFAR-10 Classification
-
-本实验使用自定义 `CifarResNet`，没有直接套用 torchvision public model。网络包含 `Conv2d`、`BatchNorm2d`、Residual Connection、Dropout、Pooling 和 Fully-Connected classifier。训练中使用 RandomCrop、HorizontalFlip、RandomErasing、label smoothing、cosine learning-rate schedule 和 mixed precision。
-
-Final model configuration:
-
-```text
-{json.dumps(final_eval.get("config", asdict(FINAL_CONFIG)), indent=2)}
-```
-
-Final test accuracy: **{fmt_metric(final_acc)}**  
-Final test error: **{fmt_metric(final_error)}**  
-Number of parameters: **{params}**
-
-![Final training curves](outputs/figures/final_{FINAL_CONFIG.name}_curves.png)
-
-![Confusion matrix](outputs/figures/final_confusion_matrix.png)
-
-![Sample predictions](outputs/figures/final_sample_predictions.png)
-
-![First-layer filters](outputs/figures/final_first_layer_filters.png)
-
-### 1.1 Architecture and Ablation
-
-Sweep 覆盖了 filters/neurons、activation functions、loss regularization 和 optimizer choices。核心观察是：larger width 通常提高 test accuracy；label smoothing 与 weight decay 能缓解 overfitting；SGD with momentum 在最终长训练中更稳定，而 AdamW 在短训练 early stage 收敛较快。
-
-Best sweep config: **{best_sweep["config"]["name"] if best_sweep else "TBD"}**, best test accuracy: **{fmt_metric(best_sweep["best_acc"]) if best_sweep else "TBD"}**
-
-![Sweep summary](outputs/figures/sweep_best_accuracy.png)
-
-## 2. Batch Normalization
-
-本部分比较 VGG-A with BN 和 VGG-A without BN。BN 被放在每个 convolution 后、ReLU 前。为了观察 optimization landscape，我们用多个 learning rates 训练同一结构，记录每个 optimization step 的 loss，再在同一步上取 min/max band。
-
-BN summary:
-
-```json
-{json.dumps(vgg_summary, indent=2)}
-```
-
-![VGG BN validation accuracy](outputs/figures/vgg_bn_val_accuracy.png)
-
-![VGG BN loss landscape](outputs/figures/vgg_bn_loss_landscape.png)
-
-![VGG BN gradient change](outputs/figures/vgg_bn_gradient_change.png)
-
-从图中可以看到，with BN 的 loss band 通常更窄，validation accuracy 上升更稳定。这个现象支持课程说明中的观点：Batch Normalization changes the parameterization and makes the optimization landscape smoother。Gradient change 的波动也更小，说明 local linear approximation 对下一步 loss behavior 更有 predictive value。
-
-## 3. Conclusion
-
-自定义 residual CNN 在 CIFAR-10 上取得了较好的 test accuracy，同时满足课程要求中的 mandatory components 和 optional components。BatchNorm 实验显示 BN 不仅提升训练速度和稳定性，也降低了不同 step size 下 loss trajectory 的波动。后续如果继续提高准确率，可以增加训练 epoch、使用 stronger augmentation 或 model averaging。
-"""
-    (root / "report.md").write_text(report, encoding="utf-8")
-
-
-def load_json(path, default=None):
-    if not Path(path).exists():
-        return {} if default is None else default
-    with open(path, encoding="utf-8") as f:
-        return json.load(f)
-
-
-def fmt_metric(value):
-    if isinstance(value, float):
-        return f"{value:.4f}"
-    return str(value)
 
 
 def parse_args():
     root = project_root()
     parser = argparse.ArgumentParser(description="CIFAR-10 custom ResNet experiments for PJ2.")
-    parser.add_argument("--mode", choices=["smoke", "sweep", "final", "eval", "report", "all"], default="smoke")
+    parser.add_argument("--mode", choices=["smoke", "sweep", "final", "eval", "all"], default="smoke")
     parser.add_argument("--data-root", default=str(root / "data"))
     parser.add_argument("--output-root", default=str(root / "outputs"))
     parser.add_argument("--batch-size", type=int, default=128)
@@ -675,16 +580,12 @@ def main():
         run_smoke(args)
     elif args.mode == "sweep":
         run_sweep(args)
-        generate_report(args)
     elif args.mode == "final":
         run_final(args)
     elif args.mode == "eval":
         if not args.checkpoint:
             raise SystemExit("--checkpoint is required for eval mode")
         save_confusion_and_samples(args, args.checkpoint)
-        generate_report(args)
-    elif args.mode == "report":
-        generate_report(args)
     elif args.mode == "all":
         run_smoke(args)
         run_sweep(args)

@@ -2,8 +2,7 @@ __pycache__/
 .pycache_check/
 
 PJ2_2026/data/
-PJ2_2026/codes/VGG_BatchNorm/data/
-
+PJ2_2026/codes/VGG_BatchNorm/data/cifar-10-python.tar.gz
 PJ2_2026/outputs/
 
 report.md
