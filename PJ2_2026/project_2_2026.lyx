@@ -1,0 +1,1176 @@
+#LyX 2.5 created this file. For more info see https://www.lyx.org/
+\lyxformat 643
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\begin_preamble
+\usepackage{xcolor}
+\usepackage{listings}
+\lstdefinestyle{lfonts}{
+	basicstyle=\footnotesize\ttfamily,
+	stringstyle=\color{purple},
+	keywordstyle=\color{blue!60!black}\bfseries,
+	commentstyle=\color{olive}\scshape,
+}
+\lstdefinestyle{lnumbers}{
+	numbers=left,
+	numerstyle=\tiny,
+	numbersep=1em,
+	firstnumber=1,
+	stepnumber=1,
+}
+\lstdefinestyle{llayout}{
+	breaklines=true,
+	tabsize=2,
+	columns=flexible,
+}
+\lstdefinestyle{lgeometry}{
+	xleftmargin=20pt,
+	xrightmargin=0pt,
+	frame=tb,
+	framesep=\fboxsep,
+	framexleftmargin=20pt,
+}
+\lstdefinestyle{lgeneral}{
+	style=lfonts,
+	style=lnumbers,
+	style=llayout,
+	style=lgeometry,
+}
+\lstdefinestyle{python}{
+	language={python},
+	style=lgeneral,
+}
+\end_preamble
+\use_default_options true
+\maintain_unincluded_children no
+\language english
+\language_package default
+\inputencoding auto-legacy
+\fontencoding auto
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_roman_osf false
+\font_sans_osf false
+\font_typewriter_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification default
+\crossref_package refstyle
+\use_formatted_ref 0
+\use_minted 0
+\use_lineno 0
+\backgroundcolor none
+\fontcolor none
+\notefontcolor lightgray
+\boxbgcolor red
+\table_border_color default
+\table_odd_row_color default
+\table_even_row_color default
+\table_alt_row_colors_start 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\rightmargin 2cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tablestyle default
+\tracking_changes false
+\output_changes false
+\change_bars false
+\postpone_fragile_content false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\docbook_table_output 0
+\docbook_mathml_prefix 1
+\docbook_mathml_version 0
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Project-2 of 
+\begin_inset Quotes eld
+\end_inset
+
+Neural Network and Deep Learning
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Author
+Yanwei Fu
+\end_layout
+
+\begin_layout Abstract
+
+\color red
+(1) This is the second project of our course.
+ The deadline is 
+\emph on
+23:59,
+ June 14th,
+ 2026
+\emph default
+.
+ Please upload the report via elearning.
+ 
+\end_layout
+
+\begin_layout Abstract
+
+\color red
+(2) The goal of your write-up is to document the experiments you’ve done and your main findings.
+ So be sure to explain the results.
+ Hand in a single PDF file of your report.
+ Enclose a Github link to your codes in your submitted file.
+ You should also provide a link to your dataset and your trained model weights in your report.
+ You may upload the dataset and model into Google Drive or other Netdisk service platform.
+ Also put the name and Student ID in your paper.
+ Lack of code link or model weights link will lead to a penalization of scores.
+\end_layout
+
+\begin_layout Abstract
+
+\color red
+(3) About the deadline and penalty.
+ In general,
+ you should submit the paper according to the deadline of each project.
+ The late submission is also acceptable;
+ however,
+ you will be penalized 
+\begin_inset Formula $10\%$
+\end_inset
+
+ of scores for each week's delay.
+\end_layout
+
+\begin_layout Abstract
+
+\color red
+(4)
+\color inherit
+ For junior students.
+ we recommend to start with Mindspore tutorial on CIFAR 10 example:
+ 
+\end_layout
+
+\begin_layout Abstract
+https://mindspore.cn/docs/api/zh-CN/r1.5/api_python/dataset/mindspore.dataset.Cifar10Dataset.html
+\end_layout
+
+\begin_layout Section
+Train a Network on CIFAR-10 (60%)
+\end_layout
+
+\begin_layout Standard
+CIFAR-10 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "krizhevsky2009learning"
+literal "false"
+
+\end_inset
+
+ is a widely used dataset for visual recognition task.
+ The CIFAR-10 dataset (Canadian Institute For Advanced Research) is a collection of images that are commonly used to train machine learning and computer vision algorithms.
+ It is one of the most widely used datasets for machine learning research.
+ The CIFAR-10 dataset contains 60,000 
+\begin_inset Formula $32\times32$
+\end_inset
+
+ color images in 10 different classes.
+ The 10 different classes represent airplanes,
+ cars,
+ birds,
+ cats,
+ deer,
+ dogs,
+ frogs,
+ horses,
+ ships,
+ and trucks (as shown in Figure 1).
+ There are 6,000 images of each class.
+ Since the images in CIFAR-10 are low-resolution (
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $32\times32$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+),
+ this dataset can allow us to quickly try our models to see whether it works.
+\end_layout
+
+\begin_layout Standard
+In this project,
+ you will train neural network models on CIFAR-10 to optimize performance.
+ Report the best test error you are able to achieve on this dataset,
+ and report the structure you constructed to achieve this.
+ 
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pic/CIFAR-10.png
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+CIFAR-10 Dataset
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Getting Started
+\end_layout
+
+\begin_layout Enumerate
+You may download the dataset from the official website 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "website"
+literal "false"
+
+\end_inset
+
+ or use the torchvision package.
+ Here is a demo provided by PyTorch 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "demo1"
+literal "false"
+
+\end_inset
+
+.
+ 
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+\backslash
+begin{lstlisting}[style=python]
+\end_layout
+
+\begin_layout Plain Layout
+import torch 
+\end_layout
+
+\begin_layout Plain Layout
+import torchvision 
+\end_layout
+
+\begin_layout Plain Layout
+import torchvision.transforms as transforms
+\end_layout
+
+\begin_layout Plain Layout
+transform = transforms.Compose( [transforms.ToTensor(),
+ transforms.Normalize((0.5,
+ 0.5,
+ 0.5),
+ (0.5,
+ 0.5,
+ 0.5))])
+\end_layout
+
+\begin_layout Plain Layout
+trainset = torchvision.datasets.CIFAR10(root='./data',
+ train=True,
+ download=True,
+ transform=transform) 
+\end_layout
+
+\begin_layout Plain Layout
+trainloader = torch.utils.data.DataLoader(trainset,
+ batch_size=4,
+ shuffle=True,
+ num_workers=2)
+\end_layout
+
+\begin_layout Plain Layout
+testset = torchvision.datasets.CIFAR10(root='./data',
+ train=False,
+ download=True,
+ transform=transform) 
+\end_layout
+
+\begin_layout Plain Layout
+testloader = torch.utils.data.DataLoader(testset,
+ batch_size=4,
+ shuffle=False,
+ num_workers=2)
+\end_layout
+
+\begin_layout Plain Layout
+
+\backslash
+end{lstlisting}
+\end_layout
+
+\end_inset
+
+When setting 
+\emph on
+download=True 
+\emph default
+in line 5,
+ it will download the dataset to the defined 
+\emph on
+root
+\emph default
+ path automatically.
+ For the construction,
+ training and testing the neural network model,
+ you may read the tutorial 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "demo1"
+literal "false"
+
+\end_inset
+
+ as a start.
+\end_layout
+
+\begin_layout Enumerate
+Your network will have all the following components:(16%)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Fully-Connected layer;
+\end_layout
+
+\begin_layout Enumerate
+2D convolutional layer;
+\end_layout
+
+\begin_layout Enumerate
+2D pooling layer;
+\end_layout
+
+\begin_layout Enumerate
+Activations;
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Your network may have some of (at least one) the following components:(8%)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Batch-Norm layer;
+\end_layout
+
+\begin_layout Enumerate
+Drop out;
+\end_layout
+
+\begin_layout Enumerate
+Residual Connection;
+\end_layout
+
+\begin_layout Enumerate
+Others;
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+To optimize your network,
+ you will try all the following strategies:(8%)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Try different number of neurons/filters;
+\end_layout
+
+\begin_layout Enumerate
+Try different loss functions (with different regularization);
+\end_layout
+
+\begin_layout Enumerate
+Try different activations;
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+To optimize your network,
+ you may select one of the following strategies:
+ (8%)
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Try different optimizers using 
+\emph on
+torch.optim
+\emph default
+;
+\end_layout
+
+\begin_layout Enumerate
+Implement an optimizer for a network including 2(a)-(d) by yourself (You will 
+\series bold
+not
+\series default
+ use things like 
+\emph on
+torch.nn
+\emph default
+,
+ 
+\emph on
+torch.sigmoid
+\emph default
+,
+ etc.
+ You may use things like 
+\emph on
+torch.matmul
+\emph default
+,
+ etc) ,
+ and use 
+\emph on
+torch.optim
+\emph default
+ to optimize your full model;
+\end_layout
+
+\begin_layout Enumerate
+Implement an optimizer for your full model by yourself;
+\series bold
+
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+
+\series bold
+Note
+\series default
+:
+ You will 
+\series bold
+not
+\series default
+ use things like 
+\emph on
+torch.nn
+\emph default
+,
+ 
+\emph on
+torch.sigmoid
+\emph default
+,
+ etc.
+ You may use things like 
+\emph on
+torch.matmul
+\emph default
+,
+ etc.
+ Hence you will implement all the components by yourself.
+ 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Reveal the insights of your network,
+ say,
+ visualization of filters,
+ loss landscape,
+ network interpretation.
+ (8%)
+\end_layout
+
+\begin_layout Subsection
+Scores of this task
+\end_layout
+
+\begin_layout Standard
+Yes,
+ you are totally free to use any component in torch,
+ pytorch or other deep learning toolbox.
+ Then how do we score your project in this task?
+ We care about
+\end_layout
+
+\begin_layout Standard
+(1) (12%)The classification performance of your network,
+ in term of total parameters of network,
+ network structure,
+ and training speed.
+ For the projects of similar results,
+ we will check the total parameters,
+ and network structure,
+ or whether any new optimization algorithms are used to train the network.
+ 
+\end_layout
+
+\begin_layout Standard
+(2) Any insightful results and interesting visualization of the learned model,
+ and training process,
+ or anything like this.
+ 
+\end_layout
+
+\begin_layout Standard
+(3) You can report the results from more than one network;
+ but if you directly utilize the public available models without anything changes,
+ the scores of your projects would be slightly penalized.
+\end_layout
+
+\begin_layout Section
+Batch Normalization (30%)
+\end_layout
+
+\begin_layout Standard
+Batch Normalization (BN) is a widely adopted technique that enables faster and more stable training of deep neural networks (DNNs).
+ The tendency to improve accuracy and speed up training have established BN as a favorite technique in deep learning.
+ At a high level,
+ BN is a technique that aims to improve the training of neural networks by stabilizing the distributions of layer inputs.
+ This is achieved by introducing additional network layers that control the first two moments (mean and variance) of these distributions.
+\end_layout
+
+\begin_layout Standard
+In this project,
+ you will first test the effectiveness of BN in the training process,
+ and then explore how does BN help optimization.
+ The sample codes are provided by Python.
+\end_layout
+
+\begin_layout Subsection
+The Batch Normalization Algorithm
+\end_layout
+
+\begin_layout Standard
+Here we primarily consider BN for convolutional neural networks.
+ Both the input and output of a BN layer are four dimensional tensors,
+ which we refer to as 
+\begin_inset Formula $I_{b,c,x,y}$
+\end_inset
+
+ and 
+\begin_inset Formula $O_{b,c,x,y}$
+\end_inset
+
+,
+ respectively.
+ The dimensions corresponding to examples within a batch 
+\begin_inset Formula $b$
+\end_inset
+
+,
+ channel 
+\begin_inset Formula $c$
+\end_inset
+
+,
+ and two spatial dimensions 
+\begin_inset Formula $x,y$
+\end_inset
+
+ respectively.
+ For input images the channels correspond to the RGB channels.
+ BN applies the same normalization for all activations in a given channel,
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+O_{b,c,x,y}\leftarrow\gamma_{c}\frac{I_{b,c,x,y}-\mu_{c}}{\sqrt{\sigma^{2}_{c}+\epsilon}}+\beta_{c}\text{\ensuremath{\qquad}}\forall b,c,x,y.
+\]
+
+\end_inset
+
+Here,
+ BN subtracts the mean activation 
+\begin_inset Formula $\mu_{c}=\frac{1}{\left|\mathcal{\mathcal{B}}\right|}\sum_{b,x,y}I_{b,c,x,y}$
+\end_inset
+
+from all input activations in channel 
+\begin_inset Formula $c$
+\end_inset
+
+,
+ where 
+\begin_inset Formula $\mathcal{B}$
+\end_inset
+
+ contains all activations in channel 
+\begin_inset Formula $c$
+\end_inset
+
+ across all features 
+\begin_inset Formula $b$
+\end_inset
+
+ in the entire mini-batch and all spatial 
+\begin_inset Formula $x,y$
+\end_inset
+
+,
+ locations.
+ Subsequently,
+ BN divides the centered activation by the standard deviation 
+\begin_inset Formula $\sigma_{c}$
+\end_inset
+
+ (plus 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ for numerical stability) which is calculated analogously.
+ During testing,
+ running averages of the mean and variances are used.
+ Normalization is followed by a channel-wise affine transformation parametrized through 
+\begin_inset Formula $\gamma_{c},\beta_{c}$
+\end_inset
+
+,
+ which are learned during training.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Dataset
+\series default
+.
+ To investigate batch normalization we will use following experimental setup:
+ image classification on CIFAR-10 with a network has the same architecture as VGG-A except the size of Linear layers is smaller since input assumed to be 
+\begin_inset Formula $32\times32\times3$
+\end_inset
+
+,
+ instead of 
+\begin_inset Formula $224\times224\times3$
+\end_inset
+
+.
+ And all sample codes are implemented based on 
+\emph on
+Pytorch
+\emph default
+.
+\begin_inset Note Note
+status collapsed
+
+\begin_layout Plain Layout
+The CIFAR-10 dataset (Canadian Institute For Advanced Research) is a collection of images that are commonly used to train machine learning and computer vision algorithms.
+ It is one of the most widely used datasets for machine learning research.
+ The CIFAR-10 dataset contains 60,000 
+\begin_inset Formula $32\times32$
+\end_inset
+
+ color images in 10 different classes.
+ The 10 different classes represent airplanes,
+ cars,
+ birds,
+ cats,
+ deer,
+ dogs,
+ frogs,
+ horses,
+ ships,
+ and trucks (as shown in Figure 1).
+ There are 6,000 images of each class.
+ Since the images in CIFAR-10 are low-resolution (
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $32\times32$
+\end_inset
+
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+),
+ this dataset can allow us to quickly try our models to see whether it works.
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename ../ref-projects/deep_learning_pj/BN/CIFAR-10.png
+	lyxscale 40
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+Figure 1:
+ CIFAR-10 Dataset
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+You can run 
+\emph on
+loaders.py
+\emph default
+ to download CIFAR-10 dataset,
+ and output some examples to familiarize yourself with the data storage format.
+ Note that if you are using a remote server,
+ you need to use 
+\emph on
+matplotlib.pyplot.savefig()
+\emph default
+ function to save the plot results,
+ and then download to local to view.
+\end_layout
+
+\begin_layout Subsection
+VGG-A with and without BN (15%)
+\end_layout
+
+\begin_layout Standard
+In this section,
+ you will compare the performance and characteristics of VGG-A with and without BN.
+ We encourage you to extend and modify the provided code for clearer and more convincing experimental results.
+ Note that you should understand the code first instead of using it as a black box.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pic/vgg.png
+	lyxscale 50
+	scale 50
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+ConvNet configurations (shown in columns) of VGG model
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If you want to use partial dataset to train for faster results,
+ set 
+\emph on
+n_items
+\emph default
+ to meet your wish.
+ The basic VGG-A network is implemented in 
+\emph on
+VGG.py
+\emph default
+,
+ you can train this network first to understand the overall network architecture and view the training results.
+ Then write a class 
+\emph on
+VGG_BatchNorm
+\emph default
+ to add the BN layers to the original network,
+ and finally visualize the training results of the two for comparison.
+ Sample code for training and visualizing has been included in VGG_Loss_Landscape.py.
+\end_layout
+
+\begin_layout Subsection
+How does BN help optimization?
+ (15%)
+\begin_inset CommandInset label
+LatexCommand label
+name "subsec:How-does-BN"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It is not enough to just use BN.
+ We should understand why it can play a positive role in our optimization process so as to have a more comprehensive understanding of the optimization process of deep learning and select the appropriate network structure according to the actual situation in the future works.
+ You may want to check some papers,
+ e.g.,
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "bn-paper"
+literal "false"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+So what stands behind BN?
+ After all,
+ in order to understand how BN affects the training performance it would be logical to examine the effect that BN has on the corresponding optimization landscape.
+ To this end,
+ recall that our training is performed using gradient descent method and this method draws on the first-order optimization paradigm.
+ In this paradigm,
+ we use the local linear approximation of the loss around the current solution to identify the best update step to take.
+ Consequently,
+ the performance of these algorithms is largely determined by how predictive of the nearby loss landscape this local approximation is.
+\end_layout
+
+\begin_layout Standard
+Recent research results show that 
+\emph on
+BN reparametrizes the underlying optimization problem to make its landscape significantly more smooth
+\emph default
+.
+ So along this line,
+ we are going to measure:
+\end_layout
+
+\begin_layout Enumerate
+Loss landscape or variation of the value of the loss;
+\end_layout
+
+\begin_layout Enumerate
+Gradient predictiveness or the change of the loss gradient;
+\end_layout
+
+\begin_layout Enumerate
+Maximum difference in gradient over the distance.
+\end_layout
+
+\begin_layout Subsubsection
+Loss Landscape
+\end_layout
+
+\begin_layout Standard
+To test the impact of BN on the stability of the loss itself,
+ 
+\emph on
+i.e.
+\emph default
+,
+ its Lipschitzness,
+ for each given step in the training process,
+ you should compute the gradient of the loss at that step and measure how the loss changes as we move in that direction.
+ That is,
+ at a particular training step,
+ measure the variation in loss.
+ You can do as following for a simple implementation:
+\end_layout
+
+\begin_layout Enumerate
+Select a list of learning rates to represent different step sizes to train and save the model (i.e.
+ [1e-3,
+ 2e-3,
+ 1e-4,
+ 5e-4]);
+\end_layout
+
+\begin_layout Enumerate
+Save the training loss of all models for each step;
+\end_layout
+
+\begin_layout Enumerate
+Maintain two lists:
+ 
+\emph on
+max_curve
+\emph default
+ and 
+\emph on
+min_curve
+\emph default
+,
+ select the maximum value of loss in all models
+\emph on
+ on the same 
+\emph default
+step,
+ add it to 
+\emph on
+max_curve
+\emph default
+,
+ and the minimum value to 
+\emph on
+min_curve
+\emph default
+;
+\end_layout
+
+\begin_layout Enumerate
+Plot the results of the two lists,
+ and use 
+\emph on
+matplotlib.pyplot.fill_between 
+\emph default
+method to fill the area between the two lines.
+\end_layout
+
+\begin_layout Standard
+Use the same approach for VGG-A model with BN.
+ Finally,
+ try to visualize the results from VGG-A with BN and without BN on the same pic for more intuitive results.
+\end_layout
+
+\begin_layout Standard
+\align center
+\begin_inset Float figure
+placement document
+alignment document
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename pic/loss_landscape.png
+	lyxscale 5
+	scale 30
+
+\end_inset
+
+
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Loss landscape example
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For your better understanding,
+ we provide sample code for visualizing the loss landscape (VGG_Loss_Landscape.py).
+ You need to understand the code and train different models to reproduce the results of the Figure 2.
+ Please feel free to modify and improve the sample code and report your choice of learning rates.
+ Most importantly,
+ show your final comparison results with the help of 
+\emph on
+matplotlib.pyplot
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\xout off
+\uuline off
+\uwave off
+\noun off
+\color none
+.
+
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\strikeout default
+\xout default
+\uuline default
+\uwave default
+\noun default
+\color inherit
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Subsubsection
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintCited"
+bibfiles "../PJ2_2025/bib"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
